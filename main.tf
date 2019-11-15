@@ -28,6 +28,6 @@ resource "aws_vpn_connection_route" "vpn" {
   count = var.vpn_static_routes_only ? length(var.vpn_static_routes) : 0
 
   destination_cidr_block = element(var.vpn_static_routes, count.index)
-  vpn_connection_id      = local.vgw_id
+  vpn_connection_id      = aws_vpn_connection.vpn.id
 }
 
