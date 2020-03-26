@@ -31,6 +31,7 @@ variable "cgw_bgp_asn" {
 variable "cgw_ip" {
   description = "The customer gateway IP address"
   type        = string
+  default     = ""
 }
 
 variable "name" {
