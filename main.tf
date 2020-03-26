@@ -7,9 +7,12 @@ resource "aws_vpn_gateway" "vpn" {
 
 locals {
   vgw_id = var.create_vgw ? join("", aws_vpn_gateway.vpn.*.id) : var.vgw_id
+  cgw_id = var.create_cgw ? join("", aws_customer_gateway.vpn.*.id) : var.cgw_id
 }
 
 resource "aws_customer_gateway" "vpn" {
+  count = var.create_cgw ? 1 : 0
+
   bgp_asn    = var.cgw_bgp_asn
   ip_address = var.cgw_ip
   type       = "ipsec.1"
@@ -17,7 +20,7 @@ resource "aws_customer_gateway" "vpn" {
 }
 
 resource "aws_vpn_connection" "vpn" {
-  customer_gateway_id = aws_customer_gateway.vpn.id
+  customer_gateway_id = local.cgw_id
   static_routes_only  = var.vpn_static_routes_only
   vpn_gateway_id      = local.vgw_id
   type                = "ipsec.1"
